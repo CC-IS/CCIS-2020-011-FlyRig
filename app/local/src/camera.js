@@ -11,7 +11,11 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
         super();
 
         this.options = {
-
+          video: {
+            width: {min: 640, ideal: 2160 },
+            height: {min: 480, ideal: 2160 },
+            frameRate: {exact: 30}
+          }
         }
 
         this.metadata = {
@@ -48,10 +52,12 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
 
       play() {
         this.video.play();
+        //this.tempVideo.play();
       }
 
       pause() {
         this.video.stop();
+        //this.tempVideo.stop();
       }
 
       getSourceNames(cb) {
@@ -147,7 +153,14 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
             })
 
 
-            command.save(`${basePath}_${(new Date()).toISOString().replace(/:|-|\./g,'_')}.mp4`);
+            command.save(`${basePath.replace(/\/:|-|\./g,'_')}_${(new Date()).toISOString().replace(/:|-|\./g,'_')}.mp4`);
+            var csv = '';
+            for (var key in _this.metadata) {
+              if (_this.metadata.hasOwnProperty(key)) {
+                csv+=`"${key}","${_this.metadata[key]}"\n`;
+              }
+            }
+            fs.writeFileSync(`${basePath.replace(/\/:|-|\./g,'_')}_${(new Date()).toISOString().replace(/:|-|\./g,'_')}.csv`, );
           }
         });
 
@@ -169,29 +182,39 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
         _this.init((stream)=> {
           _this.stream = stream;
 
-          _this.overlayCB = ()=>{};
-
           _this.video.srcObject = _this.stream;
+
+          let track = stream.getVideoTracks()[0];
+          let consts = track.getConstraints();
+
+          if(consts.brightness) console.log("brightness");
+
+          console.log(consts);
+
+          _this.overlayCB = ()=>{};
 
           _this.video.addEventListener('loadedmetadata', ()=> {
 
-            // _this.canvas.width = _this.video.videoWidth;
-            // _this.canvas.height = _this.video.videoHeight;
+            //_this.canvas.width = _this.tempVideo.videoWidth;
+            //_this.canvas.height = _this.tempVideo.videoHeight;
 
             _this.play();
 
-            // var frames = 0;
-            // var startTime = Date.now();
-            //
+            var frames = 0;
+            //var startTime = Date.now();
+
             // clearInterval(_this.canvInt);
             // _this.canvInt = setInterval(()=>{
-            //   frames++;
-            //   console.log(1000 * frames/(Date.now() - startTime));
-            //   _this.ctx.drawImage(_this.video,0,0,_this.canvas.width, this.canvas.height);
+            //   //frames++;
+            //   //console.log(1000 * frames/(Date.now() - startTime));
+            //   _this.ctx.drawImage(_this.tempVideo,0,0,_this.canvas.width, this.canvas.height);
             //
-            // },1000/30);
+            // },1000/_this.options.video.frameRate.exact);
+            //
+            // _this.stream = _this.canvas.captureStream(_this.options.video.frameRate.exact);
 
-            //var cStream = _this.canvas.captureStream(30);
+            // _this.video.srcObject = _this.stream;
+            // _this.video.play();
 
             this.recordedChunks = [];
 
@@ -229,6 +252,8 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
           _this.root.innerHTML = `<style> @import "css/camera.css";</style>`;
 
           _this.video = µ('+video', _this.root);
+          //_this.tempVideo = µ('+video', _this.root);
+          //_this.tempVideo.display = "none";
           _this.canvas = µ('+canvas', _this.root);
           _this.ctx = _this.canvas.getContext('2d');
 

@@ -131,7 +131,7 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
     cam.options.video = {
       width: {min: 640, ideal: 2160 },
       height: {min: 480, ideal: 2160 },
-      frameRate: {ideal: 30}
+      frameRate: {exact: 30}
     };
 
     cam.video.addEventListener('loadedmetadata', ()=> {
@@ -285,10 +285,29 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
 
     camApply.onclick = ()=>{
       if(cameraSource.value != '0') cam.options.video.deviceId = cameraSource.value;
-      cam.options.video.frameRate = {ideal: rateSelect.value};
+      cam.options.video.frameRate = {exact: rateSelect.value};
       cam.options.video.width.exact = parseInt(widthSelect.value);
       cam.options.video.height.exact = parseInt(heightSelect.value);
       cam.startStream();
+    }
+
+    let caps = navigator.mediaDevices.getSupportedConstraints();
+
+    ExpoSlide.disabled = !caps.exposureMode;
+    BrightSlide.disabled = !caps.brightness;
+
+    BrightSlide.onchange = ()=>{
+      let track = cam.stream.getVideoTracks()[0];
+      track.applyConstraints({
+        advanced: [{brightness: BrightSlide.value}]
+      });
+    }
+
+    ExpoSlide.onchange = ()=>{
+      let track = cam.stream.getVideoTracks()[0];
+      track.applyConstraints({
+        advanced: [{exposureMode: "manual",exposureTime: ExpoSlide.value}]
+      });
     }
 
     var optsFromCues = ()=>{
@@ -413,6 +432,7 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
     }
 
     baseName.onchange = ()=>{
+      if(baseName.value.includes('\\') || baseName.value.includes('/')) baseName.value.replace(/\//g, '|');
       cam.baseName = baseName.value;
     }
 
