@@ -386,7 +386,7 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
         //control.setBacklight(0);
         control.setOutputs(0);
       });
-      recordStart();
+      if(AutoRecord.checked) recordStart();
       note('Running queued actions...');
     }
 
