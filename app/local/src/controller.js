@@ -9,6 +9,7 @@ obtain(['µ/serialParser.js', 'events', 'µ/utilities.js'], ({ serialParser }, E
   const STOP = 8;
   const START = 9;
   const ALL_OFF = 10;
+  const CONSTANT = 11;
   const ERROR = 126;
   const READY = 127;
 
@@ -45,6 +46,12 @@ obtain(['µ/serialParser.js', 'events', 'µ/utilities.js'], ({ serialParser }, E
         var quads = quadArray.reduce((acc,val,ind)=>acc + (val << ind));
         console.log([1, STIMULATE, frequency, amplitude, pulseLength, quads]);
         parser.sendPacket([1, STIMULATE, frequency, amplitude, pulseLength, quads]);
+      }
+
+      _this.constant = (amplitude,quadArray)=>{
+        var quads = quadArray.reduce((acc,val,ind)=>acc + (val << ind));
+        console.log([1, CONSTANT, amplitude, quads]);
+        parser.sendPacket([1, CONSTANT, amplitude, quads]);
       }
 
       _this.setBacklight = (intensity)=>{

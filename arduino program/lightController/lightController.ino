@@ -10,6 +10,7 @@ const int STIMULATE = 5;
 const int SET_BL = 6;
 const int SET_OUTPUTS = 7;
 const int ALL_OFF = 10;
+const int CONSTANT = 11;
 const int ERROR = 126;
 const int READY = 127;
 
@@ -97,13 +98,28 @@ void setup() {
     stopSeq();
     freq = input[2];
     amp = input[3];
-    duty = constrain(map(amp, 0, 100, 3440, 1352), 0, 4096);
+    duty = constrain(map(amp, 0, 100, 4096, 0), 0, 4096);
     period = 1000000/freq;
     pulseLength = input[4];
     for(int i=0; i<4; i++){
       ctrlPins[i] = bitRead(input[5],i)?1:0;
     }
     if(amp>0 && input[5]) startSeq();
+    parser.sendPacket(REPORT,STIMULATE);
+  });
+
+  parser.on(CONSTANT, [](unsigned char * input, int size){
+    stopSeq();
+    amp = input[2];
+    duty = constrain(map(amp, 0, 100, 4096, 0), 0, 4096);
+    for(int i=0; i<4; i++){
+      ctrlPins[i] = bitRead(input[3],i)?1:0;
+    }
+    active = true;
+    lightsOn = true;
+    for(int i=0; i<4; i++){
+      dac.setChannelValue(i,(ctrlPins[i])?duty:4095);
+    }
     parser.sendPacket(REPORT,STIMULATE);
   });
 

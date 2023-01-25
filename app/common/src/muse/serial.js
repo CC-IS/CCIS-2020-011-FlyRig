@@ -1,11 +1,13 @@
 'use strict';
 
-obtain(['serialport'], (com)=> {
+obtain(['serialport'], ({SerialPort: com})=> {
+  const { DelimiterParser } = require('@serialport/parser-delimiter');
   exports.Serial = function (delim = '\r\n') {
 
     //const parser = new com.parsers.Regex({ regex: /[\r\n]+/ });
     //const parser = new com.parsers.ByteLength({ length: 8 });
-    const parser = new com.parsers.Delimiter({ delimiter: delim });
+    //const parser = new com.parsers.Delimiter({ delimiter: delim });
+    const parser = new DelimiterParser({ delimiter: delim });
 
     var _this = this;
     let ser = null;
@@ -28,9 +30,7 @@ obtain(['serialport'], (com)=> {
 
     var openByName = (portName, baud) => {
       console.log('Opening serialport ' + portName);
-      ser = new com(portName, {
-        baudRate: baud,
-      });
+      ser = new com({ path: portName, baudRate: baud });
 
       /*let Pass = require('stream').PassThrough;
 
@@ -61,12 +61,12 @@ obtain(['serialport'], (com)=> {
       var name = null;
       com.list().then((ports)=> {
         ports.forEach(function (port) {
-          //console.log(port);
-          if (port.comName.includes(props.name) ||
+          console.log(port);
+          if (port.path.includes(props.name) ||
               (port.manufacturer && props.manufacturer &&
               port.manufacturer.toLowerCase() == props.manufacturer.toLowerCase()) ||
               (port.serialNumber && port.serialNumber == props.serialNumber)
-            ) name = port.comName;
+            ) name = port.path;
         });
 
         if (!name) _this.onPortNotFound(ports);

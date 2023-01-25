@@ -446,6 +446,7 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
             cam.baseName = baseName.value = lines[0][1];
 
             var mode = 'cues';
+            Metadata.innerHTML = '';
 
             for (var i = 2; i < lines.length; i++) {
               let cells = lines[i];

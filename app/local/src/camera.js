@@ -1,7 +1,9 @@
-const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path.replace('.asar','.asar.unpacked');
+
+console.log(ffmpegPath);
 
 obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
-  ffmpeg.setFfmpegPath(ffmpegPath);
+  ffmpeg.setFfmpegPath(path.resolve(ffmpegPath));
 
   console.log(fs);
   if (!customElements.get('cam-era')) {
@@ -124,7 +126,7 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
         _this.beforeSave();
         console.log('saving');
         var basePath = path.join(_this.filePath, _this.baseName);
-        var inter = path.join(__dirname,'../../../videos/intermediate.webm');
+        var inter = path.join(__dirname,'../../../intermediate.webm').replace('.asar','.asar.unpacked');
         console.log(basePath);
         console.log(inter);
         fs.writeFile(inter,buffer,'base64',(e)=>{
@@ -160,7 +162,7 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
                 csv+=`"${key}","${_this.metadata[key]}"\n`;
               }
             }
-            fs.writeFileSync(`${basePath.replace(/\/:|-|\./g,'_')}_${(new Date()).toISOString().replace(/:|-|\./g,'_')}.csv`, );
+            fs.writeFileSync(`${basePath.replace(/\/:|-|\./g,'_')}_${(new Date()).toISOString().replace(/:|-|\./g,'_')}.csv`, csv);
           }
         });
 

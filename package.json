@@ -20,26 +20,26 @@
     "ebml": "^3.0.0",
     "fluent-ffmpeg": "^2.1.2",
     "path": "^0.12.7",
-    "serialport": "^9.0.6",
+    "serialport": "^10.5.0",
     "uvc-control": "^1.0.2"
   },
   "devDependencies": {
     "electron": "^11.2.0",
     "electron-builder": "^22.7.0",
-    "electron-rebuild": "^2.3.4"
+    "electron-rebuild": "^3.2.9"
   },
   "build": {
-    "appId": "com.ccis.tcafc",
+    "appId": "com.ccis.flyrig",
     "portable": {
-      "splashImage": "..\\..\\..\\..\\build\\img\\splash.bmp"
+      "splashImage": "./build/img/splash.bmp"
     },
     "win": {
       "target": "portable",
-      "icon": "build/img/icon.png"
+      "icon": "./build/img/icon.png"
     },
     "mac": {
       "target": "dmg",
-      "icon": "build/img/icon.png"
+      "icon": "./build/img/icon.png"
     },
     "npmRebuild": "false"
   }
