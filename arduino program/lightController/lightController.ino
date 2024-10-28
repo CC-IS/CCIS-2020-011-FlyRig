@@ -14,6 +14,9 @@ const int CONSTANT = 11;
 const int ERROR = 126;
 const int READY = 127;
 
+// The indicator is attached to either pin 4 or pin 3 depending on the board
+const int INDICATOR = 4;
+
 // declare the digital-to-analog converter and serial parser objects
 Adafruit_MCP4728 dac;
 serialParser parser(Serial);
@@ -51,6 +54,7 @@ void lightToggle(){
 }
 
 void startSeq(){
+  digitalWrite(INDICATOR, HIGH);
   active = true;
   for(int i=0; i<4; i++) dac.setChannelValue(i,4095);
   MsTimer2::set(pulseLength,lightToggle);  //initialize the timer2
@@ -59,6 +63,7 @@ void startSeq(){
 }
 
 void stopSeq(){
+  digitalWrite(INDICATOR, LOW);
   active = false;
   Timer1.detachInterrupt();
   MsTimer2::stop();
@@ -80,6 +85,9 @@ void setup() {
   digitalWrite(3, LOW);
   digitalWrite(4, LOW);
   analogWrite(backlightPin,0);
+
+  pinMode(INDICATOR, OUTPUT);
+  digitalWrite(INDICATOR, LOW);
 
   for(int i=0; i<8; i++){
     pinMode(outputs[i],OUTPUT);

@@ -436,9 +436,13 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
       cam.baseName = baseName.value;
     }
 
+    dataFile.onclick = (e) => {
+      dataFile.value = '';
+    }
+
     dataFile.onchange = (e)=>{
         if(e.target.files.length){
-          cues.length = 0;
+          cues = new CueList();
           const reader = new FileReader();
           reader.addEventListener('load', (event) => {
             var lines = event.target.result.split('\n').map(item => item.split(','));
@@ -452,7 +456,10 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
               let cells = lines[i];
               if(mode == 'cues'){
                 if(cells[0] == 'end') mode = 'inter';
-                else cues.push(new StimCue(cells));
+                else {
+                  //console.log(new StimCue(cells));
+                  cues.push(new StimCue(cells));
+                }
               } else if(mode == 'meta'){
                 let opt = µ('+div', Metadata);
                 let lbl = µ('+label', opt);
