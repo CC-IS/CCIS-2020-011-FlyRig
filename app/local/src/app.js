@@ -151,7 +151,7 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
     }, 1000);
     //cam.setSourceFromLabel('USB Camera (05a3:9422)').then(cam.startStream.bind(cam));
 
-    cam.startStream();
+    //cam.startStream();
 
     var control = new LightControl(config.io);
     var cues = new CueList(control);

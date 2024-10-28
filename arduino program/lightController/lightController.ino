@@ -75,6 +75,10 @@ void setup() {
   parser.address = 1;
 
   pinMode(backlightPin, OUTPUT);
+  pinMode(3, OUTPUT);
+  pinMode(4, OUTPUT);
+  digitalWrite(3, LOW);
+  digitalWrite(4, LOW);
   analogWrite(backlightPin,0);
 
   for(int i=0; i<8; i++){
@@ -104,7 +108,14 @@ void setup() {
     for(int i=0; i<4; i++){
       ctrlPins[i] = bitRead(input[5],i)?1:0;
     }
-    if(amp>0 && input[5]) startSeq();
+    if(amp>0 && input[5]){
+      startSeq();
+      digitalWrite(3,HIGH);
+      digitalWrite(4,HIGH);
+    } else {
+      digitalWrite(3,LOW);
+      digitalWrite(4,LOW);
+    }
     parser.sendPacket(REPORT,STIMULATE);
   });
 
@@ -114,6 +125,13 @@ void setup() {
     duty = constrain(map(amp, 0, 100, 4096, 0), 0, 4096);
     for(int i=0; i<4; i++){
       ctrlPins[i] = bitRead(input[3],i)?1:0;
+    }
+    if(amp>0){
+      digitalWrite(3,HIGH);
+      digitalWrite(4,HIGH);
+    } else {
+      digitalWrite(3,LOW);
+      digitalWrite(4,LOW);
     }
     active = true;
     lightsOn = true;
