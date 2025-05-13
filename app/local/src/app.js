@@ -246,6 +246,17 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
 
     cam.beforeSave = ()=>{
       cam.metadata = {};
+      cam.addMet = 'Base filename,'+cam.baseName+'\n';
+      cam.addMet += 'Time (sec),LED1,LED2,LED3,LED4,Amplitude,Frequency,Pulse width,Odor_L,Odor_R\n';
+      if(cues.length){
+        cues.forEach((cue, i) => {
+          cam.addMet += cue.time/1000+","+cue.quads[0]+','+cue.quads[1]+','+cue.quads[2]+','+cue.quads[3]+',';
+          cam.addMet += cue.amplitude+','+cue.frequency+','+cue.pulseLength+',';
+          cam.addMet += (cue.leftOdor?String.fromCharCode(64+cue.leftOdor):'')+',';
+          cam.addMet += (cue.rightOdor?String.fromCharCode(64+cue.rightOdor):'')+'\n';
+        });
+      }
+      cam.addMet += 'end\n\nMetadata\n';
       let data = µ('div', Metadata);
       for (var i = 0; i < data.length; i++) {
         var key = µ('label', data[i])[0].textContent;

@@ -26,6 +26,8 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
           far: 'boo'
         };
 
+        this.addMet = '';
+
         this.filePath = '';
 
         this.baseName = '';
@@ -157,6 +159,7 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
 
             command.save(`${basePath.replace(/\/:|-|\./g,'_')}_${(new Date()).toISOString().replace(/:|-|\./g,'_')}.mp4`);
             var csv = '';
+            csv += _this.addMet;
             for (var key in _this.metadata) {
               if (_this.metadata.hasOwnProperty(key)) {
                 csv+=`"${key}","${_this.metadata[key]}"\n`;
