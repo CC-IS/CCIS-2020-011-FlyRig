@@ -14,8 +14,8 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
 
         this.options = {
           video: {
-            width: {min: 640, ideal: 2160 },
-            height: {min: 480, ideal: 2160 },
+            width: {min: 640, ideal: 1920 },
+            height: {min: 480, ideal: 1080 },
             frameRate: {exact: 30}
           }
         }
@@ -79,7 +79,9 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
       init(cb) {
         var _this = this;
         if (navigator.getUserMedia) {
+          console.log(_this.options);
           navigator.getUserMedia( _this.options, cb, (error)=>console.log(error.code));
+          console.log('after get user mdeia')
         }
       }
 
@@ -185,6 +187,7 @@ obtain(['fs','fluent-ffmpeg', 'path'], (fs, ffmpeg, path)=> {
       startStream(cb){
         var _this = this;
         _this.init((stream)=> {
+          console.log("here");
           _this.stream = stream;
 
           _this.video.srcObject = _this.stream;

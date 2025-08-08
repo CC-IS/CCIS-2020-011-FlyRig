@@ -30,6 +30,7 @@ unsigned long period = 1;
 int pulseLength = 5;
 bool lightState = 0;
 int ctrlPins[4] = {0,0,0,0};
+bool lightsOn = false;
 
 // declare vairables for backlight
 int blIntensity = 0;
@@ -180,7 +181,7 @@ void setup() {
 //  startSeq();
 }
 
-bool lightsOn = false;
+
 
 void loop() {
   parser.idle();

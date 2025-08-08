@@ -36,8 +36,8 @@ class StimCue {
     _this.pulseLength = getVal(cueArray[7]);
     _this.leftOdor = 0;
     _this.rightOdor = 0;
-    if(odorCodes[cueArray[8][0]]) _this.leftOdor = odorCodes[cueArray[8][0]];
-    if(odorCodes[cueArray[9][0]]) _this.rightOdor = odorCodes[cueArray[9][0]];
+    if(odorCodes[cueArray[8] && cueArray[8][0]]) _this.leftOdor = odorCodes[cueArray[8][0]];
+    if(odorCodes[cueArray[9] && cueArray[9][0]]) _this.rightOdor = odorCodes[cueArray[9][0]];
   }
 
   run(control){
@@ -129,8 +129,8 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
     })
 
     cam.options.video = {
-      width: {min: 640, ideal: 2160 },
-      height: {min: 480, ideal: 2160 },
+      width: {min: 640, ideal: 1920 },
+      height: {min: 360, ideal: 1080 },
       frameRate: {exact: 30}
     };
 
@@ -296,9 +296,9 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
 
     camApply.onclick = ()=>{
       if(cameraSource.value != '0') cam.options.video.deviceId = cameraSource.value;
-      cam.options.video.frameRate = {exact: rateSelect.value};
-      cam.options.video.width.exact = parseInt(widthSelect.value);
-      cam.options.video.height.exact = parseInt(heightSelect.value);
+      cam.options.video.frameRate = {ideal: rateSelect.value};
+      cam.options.video.width.ideal = parseInt(widthSelect.value);
+      cam.options.video.height.ideal = parseInt(heightSelect.value);
       cam.startStream();
     }
 
@@ -317,7 +317,7 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
     ExpoSlide.onchange = ()=>{
       let track = cam.stream.getVideoTracks()[0];
       track.applyConstraints({
-        advanced: [{exposureMode: "manual",exposureTime: ExpoSlide.value}]
+        advanced: [{exposureMode: "continuous",exposureTime: ExpoSlide.value}]
       });
     }
 
@@ -453,7 +453,7 @@ obtain(obtains, ({ LightControl }, {Camera}, {ProgressRing}, os, path)=> {
 
     dataFile.onchange = (e)=>{
         if(e.target.files.length){
-          cues = new CueList();
+          cues = new CueList(control);
           const reader = new FileReader();
           reader.addEventListener('load', (event) => {
             var lines = event.target.result.split('\n').map(item => item.split(','));

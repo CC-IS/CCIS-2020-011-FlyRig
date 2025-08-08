@@ -1,6 +1,6 @@
 {
   "name": "FlyRig",
-  "version": "1.0.0",
+  "version": "1.7.0",
   "description": "Fly behavior recording rig",
   "main": "main.js",
   "scripts": {
