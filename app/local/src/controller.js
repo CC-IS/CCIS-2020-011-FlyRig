@@ -45,6 +45,7 @@ obtain(['µ/serialParser.js', 'events', 'µ/utilities.js'], ({ serialParser }, E
       _this.stimulate = (frequency,amplitude,pulseLength,quadArray)=>{
         var quads = quadArray.reduce((acc,val,ind)=>acc + (val << ind));
         console.log([1, STIMULATE, frequency, amplitude, pulseLength, quads]);
+        console.log(Date.now());
         parser.sendPacket([1, STIMULATE, frequency, amplitude, pulseLength, quads]);
       }
 
